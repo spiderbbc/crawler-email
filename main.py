@@ -148,6 +148,7 @@ async def crawl(url, max_urls=50):
 
 
 if __name__ == "__main__":
+    import os
     import argparse
     import asyncio
     from signal import SIGINT, SIGTERM
@@ -181,6 +182,15 @@ if __name__ == "__main__":
     # get the domain to name txt
     domain_name = urlparse(url).netloc
 
+    # if folder not exits, then create
+    if not os.path.isdir('links') and not os.path.isdir('emails'):
+        try:
+            os.makedirs('links')
+            os.makedirs('emails')
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise
+
     # save the internal links to a file
     with open(f"links/{domain_name}_internal_links.txt", "w") as f:
         for internal_link in internal_urls:
@@ -193,9 +203,10 @@ if __name__ == "__main__":
 
 
     # save the emails in to the file
-    with open(f"emails/{domain_name}_internals_emails.txt", "w") as f:
-        for email in emails:
-            print(email.strip(), file=f)
+    if not emails:
+        with open(f"emails/{domain_name}_internals_emails.txt", "w") as f:
+            for email in emails:
+                print(email.strip(), file=f)
 
     # print results
     print("[+] Total Internal links:", len(internal_urls))
