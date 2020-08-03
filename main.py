@@ -130,7 +130,6 @@ def get_all_email(href):
                     emails.add(re_match.group())
 
 
-
 async def crawl(url, max_urls=50):
     """
     Crawls a web page and extracts all links.
@@ -149,6 +148,7 @@ async def crawl(url, max_urls=50):
 
 if __name__ == "__main__":
     import os
+    import errno
     import argparse
     import asyncio
     from signal import SIGINT, SIGTERM
@@ -203,13 +203,13 @@ if __name__ == "__main__":
 
 
     # save the emails in to the file
-    if not emails:
+    if emails:
         with open(f"emails/{domain_name}_internals_emails.txt", "w") as f:
             for email in emails:
                 print(email.strip(), file=f)
 
     # print results
-    print("[+] Total Internal links:", len(internal_urls))
-    print("[+] Total External links:", len(external_urls))
+    print("[+] Total links Internos:", len(internal_urls))
+    print("[+] Total links Externos:", len(external_urls))
     print("[+] Total Emails:", len(emails))
     print("[+] Total URLs:", len(external_urls) + len(internal_urls))
